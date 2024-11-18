@@ -32,7 +32,8 @@ def get_country_data(countries, indicators, start_year, end_year):
                 entry["indicator_name"] = name
                 all_data.append(entry)
     return pd.DataFrame(all_data)
-  # Clean and process data
+
+# Clean and process data
 def clean_data(df):
     df.dropna(subset=["value"], inplace=True)
     df["value"] = df["value"].astype(float)
@@ -42,6 +43,7 @@ def clean_data(df):
 def calculate_growth(df):
     df["growth"] = df.groupby(["country", "indicator_name"])["value"].pct_change() * 100
     return df
+
 import sqlite3
 
 # Save to SQLite database
@@ -55,6 +57,7 @@ def save_to_db(df, db_name="data/analytics_project.db", table_name="education_in
 def load_from_db(db_name="data/analytics_project.db", table_name="education_income"):
     with sqlite3.connect(db_name) as conn:
         return pd.read_sql(f"SELECT * FROM {table_name}", conn)
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -81,4 +84,3 @@ def plot_correlation(df):
     plt.tight_layout()
     plt.savefig("visualizations/growth_correlation.png")
     plt.show()
-
